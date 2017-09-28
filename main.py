@@ -43,7 +43,7 @@ dict_str = '''a according accounts aleatoric all also although always among an a
 
 #print "Dictionary String => \n " + dict_str + "\n"
 
-dictionary_dict = dictionary_dict()
+dictionary_dict_list = dictionary_dict()
 #print dictionary_dict
 question_list = string_process(ques_str)
 #print question_list
@@ -53,52 +53,101 @@ dictionary_list = string_process(dict_str)
 #print dictionary_list
 
 
-var_obj = {}
-
+dict_obj_list = {}
+unset_key = dictionary_dict()
 key = {}
 
 for show in dictionary_list:
-	tmp_dict_list=[]
+	tmp_ques_list=[]
 	for dict_word in question_count_list:
 		if len(dict_word) == len(show):
-			tmp_dict_list.append(dict_word)
+			tmp_ques_list.append(dict_word)
 
-	var_obj[show] = tmp_dict_list
-	if len(tmp_dict_list) == 1 :
-		key[show] = tmp_dict_list
-	#print "[ " +show + " ]  =>  " + ','.join(tmp_dict_list) + '\n'
+	dict_obj_list[show] = tmp_ques_list
 
+	if len(tmp_ques_list) == 1 :
+		key[show] = tmp_ques_list
+	else:
+		for tmp_dict_word in tmp_ques_list:
+			campare_index = 0
+			for tmp_dict_char in tmp_dict_word:
+				
+				if not(tmp_dict_word[campare_index] in unset_key[show[campare_index]]) :
+					unset_key[show[campare_index]].append(tmp_dict_word[campare_index])
+				
+				campare_index += 1
+
+	
+
+	#print "[ " +show + " ]  =>  " + ','.join(tmp_ques_list) + '\n'
 
 #print key
 
-for camp_list in key:
+for key_camp_list in key:
 	#print camp_list + " => " 
 	#print key[camp_list]
 	i=0
-	for camp_char in camp_list:
-		dictionary_dict[camp_char] = key[camp_list][0][i]
-		
+	for key_camp_char in key_camp_list:
+		dictionary_dict_list[key_camp_char] = key[key_camp_list][0][i]
 		#print camp_char + "=>" +  key[camp_list][0][i]
 		i += 1
 
-print dictionary_dict
+print "dictionary dict list => "
+print dictionary_dict_list
+print "\n"
+#print unset_key.values()
+
+for x in unset_key:
+	if dictionary_dict_list[x] != []:
+		unset_key[x] = dictionary_dict_list[x]
+	else:
+		j=0
+		for y in unset_key[x]:
+			if dictionary_dict_list[y] != []:
+				del unset_key[x][j]
+
+			j += 1
+
+print "unset key list => "
+print unset_key
+print "\n"
+
+	#print "[ " +x + " ]  =>  " + ','.join(unset_key[x]) + '\n'
+
+#for x in unset_key:
+	#if dictionary_dict_list[x] != []:
+		#unset_key[x] = dictionary_dict_list[x]
+		#del unset_key
+	#else:
+		#for chk_key in unset_key[x]:
+			#print chk_key
+			#if dictionary_dict_list[chk_key] != [] :
+				#print unset_key[x]
+				#print dictionary_dict_list[chk_key]
+				#print chk_key + " =>" 
+	
+#print unset_key
+
+#print dictionary_dict_list
+
+#for dict_obj_item in dict_obj_list
+
+
+
 
 #print var_obj
 
 """
-
-
-
 var_obj = {}
 for show in question_count_list:
 	if show != '':
-		tmp_dict_list=[]
+		tmp_ques_list=[]
 		for dict_word in dictionary_list:
 			if len(dict_word) == len(show):
-				tmp_dict_list.append(dict_word)
+				tmp_ques_list.append(dict_word)
 
-		var_obj[show] = tmp_dict_list
-		#print "[ " +show + " ]  =>  " + ','.join(tmp_dict_list) + '\n'
+		var_obj[show] = tmp_ques_list
+		#print "[ " +show + " ]  =>  " + ','.join(tmp_ques_list) + '\n'
 		
 #print "[ " + str(var_obj['dtuma']) + " ] " 
 
