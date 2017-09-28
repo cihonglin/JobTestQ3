@@ -1,15 +1,33 @@
 #/usr/bin/python
 # encoding: utf-8
 from collections import Counter
+from collections import defaultdict
 import re
 
 
 def string_process(input_string):
 	input_string.splitlines()
 	lower_string = input_string.lower();
-	string_list = re.findall(r"[a-z]*",lower_string)
+	string_list = re.findall(r"[A-z]*",lower_string)
 	string_list.sort()
-	return string_list
+	return_obj = []
+	for i in string_list:
+		if i != '':
+			return_obj.append(i)
+	return return_obj
+
+def dictionary_dict():
+	dictionary_dict = {}
+	i=0
+	while i < 26:
+		x = chr(97+i)
+		#print x
+		dictionary_dict[x] = []
+		i +=1
+
+	return dictionary_dict
+
+	
 
 ques_str = '''Dtuma mu fj fqh pcqd wscux dxvmtd mu uctjv fjv umkxjax. Mhu acddcj xkxdxjhu fqx nmhas (wsmas ocgxqju dxkcvi fjv sfqdcji), qsihsd (fjv mhu fuucamfhxv acjaxnhu hxdnc, dxhxq, fjv fqhmatkfhmcj), vijfdmau, fjv hsx ucjma rtfkmhmxu cp hmdbqx fjv hxehtqx. Hsx wcqv vxqmgxu pqcd Oqxxz μουσική (dctumzx; "fqh cp hsx Dtuxu"). 
 
@@ -25,37 +43,53 @@ dict_str = '''a according accounts aleatoric all also although always among an a
 
 #print "Dictionary String => \n " + dict_str + "\n"
 
-#dictionary_dict = {'a':'a','b':'b','c':'c','d':'d','e':'e','f':'f','g':'g','h':'h','i':'i','j':'j','k':'k','l':'l','m':'m','n':'n','o':'o','p':'p','q':'q','r':'r','s':'s','t':'t','u':'u','v':'v','w':'w','x':'x','y':'y','z':'z'}
-
-
-
-dictionary_dict = {}
-i=0
-while i < 26:
-	x = chr(97+i)
-	print x
-	dictionary_dict[x] = []
-	i +=1
-
-
+dictionary_dict = dictionary_dict()
 #print dictionary_dict
-
-
 question_list = string_process(ques_str)
 #print question_list
-
 question_count_list = Counter(question_list)
 
 dictionary_list = string_process(dict_str)
-
 #print dictionary_list
 
-#print question_list_count
-
-#print question_count_list.most_common()
 
 var_obj = {}
 
+key = {}
+
+for show in dictionary_list:
+	tmp_dict_list=[]
+	for dict_word in question_count_list:
+		if len(dict_word) == len(show):
+			tmp_dict_list.append(dict_word)
+
+	var_obj[show] = tmp_dict_list
+	if len(tmp_dict_list) == 1 :
+		key[show] = tmp_dict_list
+	#print "[ " +show + " ]  =>  " + ','.join(tmp_dict_list) + '\n'
+
+
+#print key
+
+for camp_list in key:
+	#print camp_list + " => " 
+	#print key[camp_list]
+	i=0
+	for camp_char in camp_list:
+		dictionary_dict[camp_char] = key[camp_list][0][i]
+		
+		#print camp_char + "=>" +  key[camp_list][0][i]
+		i += 1
+
+print dictionary_dict
+
+#print var_obj
+
+"""
+
+
+
+var_obj = {}
 for show in question_count_list:
 	if show != '':
 		tmp_dict_list=[]
@@ -64,62 +98,36 @@ for show in question_count_list:
 				tmp_dict_list.append(dict_word)
 
 		var_obj[show] = tmp_dict_list
-				#print show +" -> "+ dict_word
-#for aa in var_obj:
-#	print aa
+		#print "[ " +show + " ]  =>  " + ','.join(tmp_dict_list) + '\n'
+		
+#print "[ " + str(var_obj['dtuma']) + " ] " 
 
-#print var_obj['fjv'];
-
-for question_count_item in question_count_list.most_common():
+#print var_obj
+for question_count_item in question_count_list.most_common(): 
 	if(question_count_item[0] != ''):
-		#print var_obj[question_count_item[0]]
+		#print var_obj['dtuma']
 		for compare_str in var_obj[question_count_item[0]]:
-			print question_count_item[0] + '=>' + compare_str
+			#if question_count_item[0] == 'dtuma':
+			#	print question_count_item[0] + '=>' + compare_str
 			campare_index = 0
+			tmp_dictionary_dict = []
 			for campare_char in question_count_item[0]:
-				#print campare_char + " => " + compare_str[campare_index]
+				#tmp_dictionary_dict = dictionary_dict[campare_char]
+				#if campare_char ==  'd':
+					#print question_count_item[0] + " <> " + compare_str + " => " + campare_char + " <> " + compare_str[campare_index]
+				if not(compare_str[campare_index] in dictionary_dict[campare_char]) :
+					dictionary_dict[campare_char].append(compare_str[campare_index])
 
+					#if campare_char ==  'd':
+					#	print compare_str[campare_index]
 				campare_index += 1
 
-
-
-	#print show + " => " + str(question_list_count[show])
+			dictionary_dict[campare_char].sort()
+			#dictionary_dict[campare_char] = tmp_dictionary_dict
 """
-
-process_question_dict = {}
-
-process_question_dict_item = {}
-question_quesion_count_list = {1:[]}
+#for char in dictionary_dict:
+	#print char + " =>" + ','.join(dictionary_dict[char])
 
 
-for string_obj in question_list:
-	if process_question_dict.has_key(string_obj):
-		process_question_dict[string_obj] += 1
-		#print "pass"
-	else:
-		#process_question_dict_item = {'string':string_obj,'count':1}
-		process_question_dict[string_obj]  = 1
-"""
+	#print 
 
-#print process_question_dict
-
-#for question_word in process_question_dict:
-
-#	question_quesion_count_list[process_question_dict[question_word]] = temp_obj
-	#print  question_word + "=>" + str(process_question_dict[question_word])
-
-#print question_quesion_count_list
-
-#Cid = dict((v, k) for k, v in process_question_dict.iteritems())
-
-
-
-#print question_list
-#print dict_list
-
-
-#lower_dict_string = dict_str.lower();
-
-#dict_list = lower_dict_string.split(' ')
-
-#print dictionary_dict
