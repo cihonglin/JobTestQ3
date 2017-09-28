@@ -2,6 +2,7 @@
 # encoding: utf-8
 from collections import Counter
 from collections import defaultdict
+from string import maketrans
 import re
 
 
@@ -26,6 +27,7 @@ def dictionary_dict():
 		i +=1
 
 	return dictionary_dict
+
 
 	
 
@@ -52,10 +54,9 @@ question_count_list = Counter(question_list)
 dictionary_list = string_process(dict_str)
 #print dictionary_list
 
-
 dict_obj_list = {}
-unset_key = dictionary_dict()
 key = {}
+#unset_key = dictionary_dict()
 
 for show in dictionary_list:
 	tmp_ques_list=[]
@@ -67,6 +68,7 @@ for show in dictionary_list:
 
 	if len(tmp_ques_list) == 1 :
 		key[show] = tmp_ques_list
+		"""
 	else:
 		for tmp_dict_word in tmp_ques_list:
 			campare_index = 0
@@ -77,11 +79,13 @@ for show in dictionary_list:
 				
 				campare_index += 1
 
-	
+	"""
 
 	#print "[ " +show + " ]  =>  " + ','.join(tmp_ques_list) + '\n'
 
 #print key
+intab_list = []
+outab_list = []
 
 for key_camp_list in key:
 	#print camp_list + " => " 
@@ -89,14 +93,28 @@ for key_camp_list in key:
 	i=0
 	for key_camp_char in key_camp_list:
 		dictionary_dict_list[key_camp_char] = key[key_camp_list][0][i]
+		if not (key[key_camp_list][0][i] in outab_list):
+			outab_list.append(key_camp_char)
+			intab_list.append(key[key_camp_list][0][i])
 		#print camp_char + "=>" +  key[camp_list][0][i]
 		i += 1
 
+intab_str = "".join(intab_list)
+outab_str = "".join(outab_list)
+
 print "dictionary dict list => "
 print dictionary_dict_list
+print intab_str
+print outab_str
 print "\n"
+
+trantab = maketrans(intab_str + intab_str.upper(), outab_str + outab_str.upper())
+
+print ques_str.translate(trantab);
+
 #print unset_key.values()
 
+"""
 for x in unset_key:
 	if dictionary_dict_list[x] != []:
 		unset_key[x] = dictionary_dict_list[x]
@@ -107,10 +125,11 @@ for x in unset_key:
 				del unset_key[x][j]
 
 			j += 1
+			"""
 
-print "unset key list => "
-print unset_key
-print "\n"
+#print "unset key list => "
+#print unset_key
+#print "\n"
 
 	#print "[ " +x + " ]  =>  " + ','.join(unset_key[x]) + '\n'
 
