@@ -5,7 +5,7 @@ from collections import defaultdict
 from string import maketrans
 import re
 
-
+#字串處理
 def stringProcess(inputString):
 	inputString.splitlines()
 	lower_string = inputString.lower();
@@ -28,39 +28,90 @@ def dictionaryDict():
 
 	return dictionary_dict
 
-def getKey(dictionaryDictList,questionList,questionCountList,dictionaryList):
+def getKey(dictionaryDictList,questionCountList,dictionaryList):
 	dict_obj_list = {}
 	key = {}
+	not_key = {}
+	trans_tab = {}
+	not_in_key_list = dictionaryDictList
+	trans_tab['value'] = []#dictionaryDictList.values()
+	trans_tab['key'] = []#dictionaryDictList.keys()
+	"""
+	if len(dictionaryDictList) > 0 :
+		print "dict_keys"
+		print dictionaryDictList.keys()
+		
+		print "dict_values"
+		print dictionaryDictList.values()
+	"""
+	ct = 0
 	for show in dictionaryList:
 		tmp_ques_list=[]
-		for dict_word in questionCountList:
-			if len(dict_word) == len(show):
-				tmp_ques_list.append(dict_word)
-		dict_obj_list[show] = tmp_ques_list
+		unchk_char_list={}
+		#排除與字典完全相同字串 
+		if show in questionCountList.keys():
+			for char in show:
+				if char not in trans_tab['key']:
+					trans_tab['key'].append(char)
+					trans_tab['vlaue'].append(char)
+		else:
+			#比對字典相同長度並唯一字串
+			for dict_word in questionCountList:
+				if len(dict_word) == len(show):
+					tmp_ques_list.append(dict_word)
+				
+			dict_obj_list[show] = tmp_ques_list
 
-		if len(tmp_ques_list) == 1 :
-			key[show] = tmp_ques_list
+			if len(tmp_ques_list) == 1 :
+				key[show] = tmp_ques_list
+			else:
+				not_key[show] = tmp_ques_list
+			  
+	#將確定的字元寫入轉換表
+	if len(key) > 1:
+		for key_camp_list in key:
+			i=0
+			for key_camp_char in key_camp_list:
+				dictionaryDictList[key_camp_char] = key[key_camp_list][0][i]
+				if key_camp_char not in trans_tab['key']:
+					trans_tab['key'].append(key_camp_char)
+					trans_tab['value'].append(key[key_camp_list][0][i])
+				i += 1
+				#ct += 1
 
-	trans_tab = {}
-	trans_tab['in'] = []
-	trans_tab['out'] = []
+	#print not_key
 
-	for key_camp_list in key:
-		i=0
-		for key_camp_char in key_camp_list:
-			dictionaryDictList[key_camp_char] = key[key_camp_list][0][i]
-			if not (key[key_camp_list][0][i] in trans_tab['out']):
-				trans_tab['out'].append(key_camp_char)
-				trans_tab['in'].append(key[key_camp_list][0][i])
-			i += 1
-	return {'dictionaryDictList':dictionaryDictList,'intab':trans_tab['in'],'outab':trans_tab['out']}
+	
+	if len(not_key) > 1:
+		for find_key_list in not_key: #saying 
+			#temp_find_key_list = []
+			for find_key_char in find_key_list: #s
+
+				for chk_value in not_key[find_key_list]:
+					#print "[%s] %s => %s " %(find_key_list, find_key_char,chk_value)
+					temp_find_key_list = []
+					for chk_chr in chk_value:
+						#if find_key_list == 'saying':
+						j=0
+						if ( (chk_chr not in trans_tab['value']) and ( chk_chr != find_key_char ) and (chk_chr not in not_in_key_list[find_key_char]) ):
+							temp_find_key_list.append(chk_chr)
+							print " %s [%s] =>  %s [%s] " %(find_key_list , find_key_char , chk_value, chk_chr)
+							#print chk_value + "< "+ str(j) + " >" + chk_value[j] 
+							j+=1
+					not_in_key_list[find_key_char] = temp_find_key_list
+
+	#if ((find_key_char not in trans_tab['value']) and (find_key_char != find_key_list[0]) ):# and (find_key_list[0] not in not_in_key_list[find_key_char])):
+	#	temp_find_key_list.append(find_key_list[0])
+	#	#print find_key_char + " <> " + find_key_list[0]
+	
+	#not_in_key_list[find_key_char] = temp_find_key_list
+
+	print not_in_key_list
+	return {'dictionaryDictList':dictionaryDictList,'intab':trans_tab['value'],'outab':trans_tab['key']}
 	
 def doTranslate(inputStr,inTabStr,ouTabStr):
 	trantab = maketrans(inTabStr + inTabStr.upper(), ouTabStr + ouTabStr.upper())
 	return inputStr.translate(trantab);
-
-
-#def showResult():
 
 
 ques_str = '''Dtuma mu fj fqh pcqd wscux dxvmtd mu uctjv fjv umkxjax. Mhu acddcj xkxdxjhu fqx nmhas (wsmas ocgxqju dxkcvi fjv sfqdcji), qsihsd (fjv mhu fuucamfhxv acjaxnhu hxdnc, dxhxq, fjv fqhmatkfhmcj), vijfdmau, fjv hsx ucjma rtfkmhmxu cp hmdbqx fjv hxehtqx. Hsx wcqv vxqmgxu pqcd Oqxxz μουσική (dctumzx; "fqh cp hsx Dtuxu"). 
@@ -79,15 +130,15 @@ dictionary_dict_list = dictionaryDict() #dictionaryDictList
 question_list = stringProcess(ques_str) #questionList
 #print question_list
 question_count_list = Counter(question_list) #questionCountList
-
+#print question_count_list.keys()
 dictionary_list = stringProcess(dict_str) #dictionaryList
 #print dictionary_list
 
 
-get_key_result = getKey(dictionary_dict_list,question_list,question_count_list,dictionary_list)
+get_key_result = getKey(dictionary_dict_list,question_count_list,dictionary_list)
 
-
-print get_key_result
+#print get_key_result.items()
+#print get_key_result
 
 
 intab_str = "".join(get_key_result['intab'])
@@ -95,12 +146,26 @@ outab_str = "".join(get_key_result['outab'])
 
 translate_result = doTranslate(ques_str,intab_str,outab_str)
 
-print "dictionary dict list => "
-print get_key_result['dictionaryDictList']
+#question_list2 = stringProcess(translate_result)
+
+#question_count_list2 = Counter(question_list2)
+
+#get_key_result2 = getKey(get_key_result['dictionaryDictList'],question_list2,question_count_list2,dictionary_list)
+
+#print get_key_result2.items()
+
+"""
+print "dictionary dict list keys => "
+print get_key_result['dictionaryDictList'].keys()
+print "dictionary dict list values => "
+print get_key_result['dictionaryDictList'].values()
+print "intab string => "
 print intab_str
+print "out tab string => "
 print outab_str
 print "\n"
-print translate_result
+"""
+#print translate_result
 
 #print unset_key.values()
 
