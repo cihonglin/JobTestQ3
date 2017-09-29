@@ -6,7 +6,7 @@ from string import maketrans
 import re
 
 
-def string_process(inputString):
+def stringProcess(inputString):
 	inputString.splitlines()
 	lower_string = inputString.lower();
 	string_list = re.findall(r"[A-z]*",lower_string)
@@ -17,7 +17,7 @@ def string_process(inputString):
 			return_obj.append(i)
 	return return_obj
 
-def dictionary_dict():
+def dictionaryDict():
 	dictionary_dict = {}
 	i=0
 	while i < 26:
@@ -28,50 +28,40 @@ def dictionary_dict():
 
 	return dictionary_dict
 
-def get_key(dictionaryDictList,questionList,questionCountList,dictionaryList):
+def getKey(dictionaryDictList,questionList,questionCountList,dictionaryList):
 	dict_obj_list = {}
 	key = {}
-	#unset_key = dictionary_dict()
-
 	for show in dictionaryList:
 		tmp_ques_list=[]
 		for dict_word in questionCountList:
 			if len(dict_word) == len(show):
 				tmp_ques_list.append(dict_word)
-
 		dict_obj_list[show] = tmp_ques_list
 
 		if len(tmp_ques_list) == 1 :
 			key[show] = tmp_ques_list
 
-	#print key
 	trans_tab = {}
 	trans_tab['in'] = []
 	trans_tab['out'] = []
 
-	intab_list = []
-	outab_list = []
-
 	for key_camp_list in key:
-		#print camp_list + " => " 
-		#print key[camp_list]
 		i=0
 		for key_camp_char in key_camp_list:
 			dictionaryDictList[key_camp_char] = key[key_camp_list][0][i]
-			if not (key[key_camp_list][0][i] in outab_list):
+			if not (key[key_camp_list][0][i] in trans_tab['out']):
 				trans_tab['out'].append(key_camp_char)
 				trans_tab['in'].append(key[key_camp_list][0][i])
-			#print camp_char + "=>" +  key[camp_list][0][i]
 			i += 1
+	return {'dictionaryDictList':dictionaryDictList,'intab':trans_tab['in'],'outab':trans_tab['out']}
+	
+def doTranslate(inputStr,inTabStr,ouTabStr):
+	trantab = maketrans(inTabStr + inTabStr.upper(), ouTabStr + ouTabStr.upper())
+	return inputStr.translate(trantab);
 
-	return_key = {
-					'dictionaryDictList':dictionaryDictList,
-					'intab':trans_tab['in'],
-					'outab':trans_tab['out']}
-	return return_key
-	
-def do_translate():
-	
+
+#def showResult():
+
 
 ques_str = '''Dtuma mu fj fqh pcqd wscux dxvmtd mu uctjv fjv umkxjax. Mhu acddcj xkxdxjhu fqx nmhas (wsmas ocgxqju dxkcvi fjv sfqdcji), qsihsd (fjv mhu fuucamfhxv acjaxnhu hxdnc, dxhxq, fjv fqhmatkfhmcj), vijfdmau, fjv hsx ucjma rtfkmhmxu cp hmdbqx fjv hxehtqx. Hsx wcqv vxqmgxu pqcd Oqxxz μουσική (dctumzx; "fqh cp hsx Dtuxu"). 
 
@@ -79,30 +69,22 @@ Hsx aqxfhmcj, nxqpcqdfjax, umojmpmafjax, fjv xgxj hsx vxpmjmhmcj cp dtuma gfqi f
 
 Hc dfji nxcnkx mj dfji atkhtqxu, dtuma mu fj mdncqhfjh nfqh cp hsxmq wfi cp kmpx. Fjamxjh Oqxxz fjv Mjvmfj nsmkcucnsxqu vxpmjxv dtuma fu hcjxu cqvxqxv scqmlcjhfkki fu dxkcvmxu fjv gxqhmafkki fu sfqdcjmxu. Acddcj ufimjou utas fu "hsx sfqdcji cp hsx unsxqxu" fjv "mh mu dtuma hc di xfqu" ncmjh hc hsx jchmcj hsfh dtuma mu cphxj cqvxqxv fjv nkxfufjh hc kmuhxj hc. Scwxgxq, 20hs-axjhtqi acdncuxq Ycsj Afox hsctosh hsfh fji uctjv afj bx dtuma, ufimjo, pcq xefdnkx, "Hsxqx mu jc jcmux, cjki uctjv." Dtumackcomuh Yxfj-Yfartxu Jfhhmxl utddfqmlxu hsx qxkfhmgmuh, ncuh-dcvxqj gmxwncmjh: "Hsx bcqvxq bxhwxxj dtuma fjv jcmux mu fkwfiu atkhtqfkki vxpmjxv—wsmas mdnkmxu hsfh, xgxj wmhsmj f umjokx ucamxhi, hsmu bcqvxq vcxu jch fkwfiu nfuu hsqctos hsx ufdx nkfax; mj uscqh, hsxqx mu qfqxki f acjuxjutu ... Bi fkk faactjhu hsxqx mu jc umjokx fjv mjhxqatkhtqfk tjmgxqufk acjaxnh vxpmjmjo wsfh dtuma dmosh bx.'''
 
-"""
-ques_str = '''Mtsia is an art porm wsose mevitm is sotnv anv silenae. Its aommon elements are pitas (wsias ooverns melovi anv sarmoni), rsitsm (anv its assoaiatev aonaepts tempo, meter, anv artiatlation), vinamias, anv tse sonia rtalities op timbre anv teettre. Tse worv verives prom Oreez μουσική (motsize; "art op tse Mtses").
-
-Tse areation, perpormanae, sionipiaanae, anv even tse vepinition op mtsia vari aaaorvino to atlttre anv soaial aonteet. Mtsia ranoes prom striatli oroanilev aompositions (anv tseir reareation in perpormanae), tsrotos improvisational mtsia to aleatoria porms. Mtsia aan be vivivev into oenres anv stboenres, altsotos tse vivivino lines anv relationssips between mtsia oenres are opten stbtle, sometimes open to personal interpretation, anv oaaasionalli aontroversial. Witsin tse arts, mtsia mai be alassipiev as a perpormino art, a pine art, anv atvitori art. It mai also be vivivev amono art mtsia anv polz mtsia. Tsere is also a strono aonneation between mtsia anv matsematias. Mtsia mai be plaiev anv searv live, mai be part op a vramatia worz or pilm, or mai be reaorvev.
-
-To mani people in mani atlttres, mtsia is an important part op tseir wai op lipe. Anaient Oreez anv Invian psilosopsers vepinev mtsia as tones orverev sorilontalli as melovies anv vertiaalli as sarmonies. Aommon saiinos stas as "tse sarmoni op tse spseres" anv "it is mtsia to mi ears" point to tse notion tsat mtsia is opten orverev anv pleasant to listen to. Sowever, 20ts-aenttri aomposer Yosn Aaoe tsotost tsat ani sotnv aan be mtsia, saiino, por eeample, "Tsere is no noise, onli sotnv." Mtsiaolooist Yean-Yaartes Nattiel stmmariles tse relativist, post-movern viewpoint: "Tse borver between mtsia anv noise is alwais atlttralli vepinev—wsias implies tsat, even witsin a sinole soaieti, tsis borver voes not alwais pass tsrotos tse same plaae; in ssort, tsere is rareli a aonsensts ... Bi all aaaotnts tsere is no sinole anv interatlttral tniversal aonaept vepinino wsat mtsia miost be.'''
-"""
-
 dict_str = '''a according accounts aleatoric all also although always among an ancient and any are art articulation arts as associated auditory be between border by cage can classified common composer compositions concept concepts connection consensus context controversial creation culturally culture cultures defined definedwhich defining definition derives divided dividing does dramatic dynamics ears elements even example film fine folk for form forms from genres governs greek harmonies harmony heard horizontally however implies important improvisational in indian intercultural interpretation into is it its jeanjacques john life lines listen live many mathematics may medium melodies melody meter might mousike muses music musicologist my nattiez no noise not notion occasionally of often only open or ordered organized part pass people performance performing personal philosophers pitch place played pleasant point postmodern qualities ranges rarely recorded recreation relationships relativist rhythm same saying sayings short significance silence single social society sometimes sonic sound spheres strictly strong subgenres subtle such summarizes tempo texture that thcentury the their there this thought through timbre to tones universal vary vertically viewpoint way what which whose within word work'''
 
 #print "Question String => \n " + ques_str + "\n"
 #print "Dictionary String => \n " + dict_str + "\n"
 
-dictionary_dict_list = dictionary_dict() #dictionaryDictList
+dictionary_dict_list = dictionaryDict() #dictionaryDictList
 #print dictionary_dict
-question_list = string_process(ques_str) #questionList
+question_list = stringProcess(ques_str) #questionList
 #print question_list
 question_count_list = Counter(question_list) #questionCountList
 
-dictionary_list = string_process(dict_str) #dictionaryList
+dictionary_list = stringProcess(dict_str) #dictionaryList
 #print dictionary_list
 
 
-get_key_result = get_key(dictionary_dict_list,question_list,question_count_list,dictionary_list)
+get_key_result = getKey(dictionary_dict_list,question_list,question_count_list,dictionary_list)
 
 
 print get_key_result
@@ -110,18 +92,15 @@ print get_key_result
 
 intab_str = "".join(get_key_result['intab'])
 outab_str = "".join(get_key_result['outab'])
-dictionary_dict_list = get_key_result['dictionaryDictList']
 
+translate_result = doTranslate(ques_str,intab_str,outab_str)
 
 print "dictionary dict list => "
-print dictionary_dict_list
+print get_key_result['dictionaryDictList']
 print intab_str
 print outab_str
 print "\n"
-
-trantab = maketrans(intab_str + intab_str.upper(), outab_str + outab_str.upper())
-
-print ques_str.translate(trantab);
+print translate_result
 
 #print unset_key.values()
 
