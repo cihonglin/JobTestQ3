@@ -33,8 +33,8 @@ def getKey(dictionaryDictList,questionCountList,dictionaryList):
 	key = {}
 	not_key = {}
 	trans_tab = {}
-	not_in_key_list = dictionaryDictList
-	print not_in_key_list
+	not_in_key_list = dictionaryDict()
+	#print not_in_key_list
 	trans_tab['value'] = []#dictionaryDictList.values()
 	trans_tab['key'] = []#dictionaryDictList.keys()
 	"""
@@ -78,41 +78,27 @@ def getKey(dictionaryDictList,questionCountList,dictionaryList):
 					trans_tab['key'].append(key_camp_char)
 					trans_tab['value'].append(key[key_camp_list][0][i])
 				i += 1
-				#ct += 1
 
-	#print not_key
 
-	
+	#取得可能值
 	if len(not_key) > 1:
 		for find_key_list in not_key: #saying 
-			#temp_find_key_list = []
-			#print not_key[find_key_list]
-			#for find_key_char in find_key_list: #s
-				#print find_key_char
 			for chk_value in not_key[find_key_list]:
-				#print "[%s] %s => %s " %(find_key_list, find_key_char,chk_value)
 				temp_find_key_list = []
 				j=0
 				for chk_chr in find_key_list:
 					if ( (chk_value[j] not in trans_tab['value']) 
-						and ( chk_value[j] != find_key_list[j] ) 
-						and (chk_value[j] not in not_in_key_list[find_key_list[j]]) ):
-						if find_key_list == 'saying':
-							print not_in_key_list[find_key_list[j]]
-							print "find_key_list< %s > %d [%s] =>  chk_value < %s > [%s] " %(find_key_list , j, find_key_list[j] , chk_value, chk_value[j])
-						#not_in_key_list[find_key_list[j]].append(chk_value[j])
+						and ( chk_value[j] != chk_chr ) 
+						and (chk_chr not in trans_tab['key'])
+						and (chk_value[j] not in not_in_key_list[chk_chr]) ):
+
+						not_in_key_list[chk_chr].append(chk_value[j])
 					j+=1
-					#print temp_find_key_list
-				#not_in_key_list[find_key_list[j]] = temp_find_key_list
-				
 
-	#if ((find_key_char not in trans_tab['value']) and (find_key_char != find_key_list[0]) ):# and (find_key_list[0] not in not_in_key_list[find_key_char])):
-	#	temp_find_key_list.append(find_key_list[0])
-	#	#print find_key_char + " <> " + find_key_list[0]
-	
-	#not_in_key_list[find_key_char] = temp_find_key_list
+	for index in not_in_key_list:
+		not_in_key_list[index].sort()
+		print index + " => " + "".join(not_in_key_list[index])
 
-	#print not_in_key_list
 	return {'dictionaryDictList':dictionaryDictList,'intab':trans_tab['value'],'outab':trans_tab['key']}
 	
 def doTranslate(inputStr,inTabStr,ouTabStr):
