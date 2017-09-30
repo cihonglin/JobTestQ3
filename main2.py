@@ -52,7 +52,8 @@ def getKey(dictionaryDictList,questionCountList,dictionaryList):
 		# 計算與字典完全相同字串 
 		if show in questionCountList.keys():
 			for char in show:
-				if char not in trans_tab['key']:
+				if char not in trans_tab['value']:
+					dictionaryDictList[char] = char
 					trans_tab['key'].append(char)
 					trans_tab['vlaue'].append(char)
 		else:
@@ -75,14 +76,14 @@ def getKey(dictionaryDictList,questionCountList,dictionaryList):
 			for key_camp_char in key_camp_list:
 				dictionaryDictList[key_camp_char] = key[key_camp_list][0][i]
 				if key_camp_char not in trans_tab['key']:
-					trans_tab['key'].append(key_camp_char)
-					trans_tab['value'].append(key[key_camp_list][0][i])
+					trans_tab['value'].append(key_camp_char)
+					trans_tab['key'].append(key[key_camp_list][0][i])
 				i += 1
 
 	#intab_str = "".join(trans_tab['value'])
 	#outab_str = "".join(trans_tab['key'])				
 
-	return {'dictionaryDictList':dictionaryDictList,'intab':trans_tab['value'],'outab':trans_tab['key']}
+	return {'dictionaryDictList':dictionaryDictList,'key':trans_tab['key'],'value':trans_tab['value']}
 
 #取得包含重複字元的字串
 def getMutliCharString(inputStringList): 
@@ -121,9 +122,12 @@ get_key_result = getKey(dictionary_dict_list,question_count_list,dictionary_list
 #print get_key_result.items()
 #print get_key_result
 
+intab_list = get_key_result['key']
+outab_list = get_key_result['value']
 
-intab_str = "".join(get_key_result['intab'])
-outab_str = "".join(get_key_result['outab'])
+
+intab_str = "".join(intab_list)
+outab_str = "".join(outab_list)
 
 """
 
@@ -156,7 +160,7 @@ for dict_mutli_string in dict_mutli_list:
 for ques_str in ques_mutli_ct_list:
 	i = 0
 	for chk_string in ques_mutli_ct_list[ques_str]:
-		trans_chk_string = doTranslate(chk_string,intab_str,outab_str)
+		trans_chk_string = doTranslate(chk_string,outab_str,intab_str)
 		if(trans_chk_string == ques_str):
 			j=0
 			for chk_char in chk_string:
@@ -169,26 +173,34 @@ for ques_str in ques_mutli_ct_list:
 			ct_chk_str = Counter(chk_string)
 			
 			if(ct_ques_str.values() == ct_chk_str.values()):
-				a=b=c=d=0
+				fa=fb=fc=fd=0
 				#for 
 				ctq_ch = ct_ques_str.most_common(1)[0][0]
 				ctq_ct = ct_ques_str.most_common(1)[0][1]
 				ccs_ch = ct_chk_str.most_common(1)[0][0]
 				ccs_ct = ct_chk_str.most_common(1)[0][1]
 
-				a = ques_str.find(ctq_ch)
-				b = chk_string.find(ccs_ch)
+				fa = ques_str.find(ctq_ch)
+				fb = chk_string.find(ccs_ch)
+				if( fa == fb):
 
-				if( a == b):
+					#print fa , fb
+					fc = ques_str.find(ctq_ch,(fa+1))+fa
+					fd = chk_string.find(ccs_ch,(fb+1))+fb
+					if(fc == fd):
+						char_index_ct = 0
+						for ques_str_char in ques_str:
+							dictionary_dict_list[ques_str_char] = chk_string[char_index_ct]
+							#intab_list.append()
 
-					c = ques_str.find(ctq_ch,a)+a
+							char_index_ct += 1
 
-					d = chk_string.find(ccs_ch,b)+b
-
-					if(c == d):
+						dictionary_dict_list[ctq_ch] = ccs_ch
 						print "*********************"
 						print ques_str + " => " + chk_string
-						print "%s(%d) in [%d:%d]  => %s(%d) in [%d:%d]" %(ctq_ch,ctq_ct,a,c,ccs_ch,ccs_ct,b,d)
+						print "%s(%d) in [%d:%d]  => %s(%d) in [%d:%d]" %(ctq_ch,ctq_ct,fa,fc,ccs_ch,ccs_ct,fb,fd)
+
+
 
 
 
@@ -203,7 +215,12 @@ for ques_str in ques_mutli_ct_list:
 
 #print ques_mutli_ct_list
 
-#print dictionary_dict_list
+#intab_list = dictionary_dict_list.keys()
+#intab_string = "".join(intab_list)
+
+#print intab_string
+
+print dictionary_dict_list
 
 
 #print trans_ques_count_list
