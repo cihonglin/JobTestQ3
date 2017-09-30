@@ -79,6 +79,9 @@ def getKey(dictionaryDictList,questionCountList,dictionaryList):
 					trans_tab['value'].append(key[key_camp_list][0][i])
 				i += 1
 
+	#intab_str = "".join(trans_tab['value'])
+	#outab_str = "".join(trans_tab['key'])				
+
 	return {'dictionaryDictList':dictionaryDictList,'intab':trans_tab['value'],'outab':trans_tab['key']}
 
 #取得包含重複字元的字串
@@ -118,9 +121,11 @@ get_key_result = getKey(dictionary_dict_list,question_count_list,dictionary_list
 #print get_key_result.items()
 #print get_key_result
 
-"""
+
 intab_str = "".join(get_key_result['intab'])
 outab_str = "".join(get_key_result['outab'])
+
+"""
 
 trans_result = doTranslate(ques_str,intab_str,outab_str)
 
@@ -129,7 +134,7 @@ trans_ques_list = stringProcess(trans_result) #questionList
 trans_ques_count_list = Counter(trans_ques_list) #questionCountList
 """
 
-print get_key_result['dictionaryDictList']
+#print get_key_result['dictionaryDictList']
 
 ques_mutli_list = getMutliCharString(question_count_list)
 
@@ -148,12 +153,59 @@ for dict_mutli_string in dict_mutli_list:
 
 	ques_mutli_ct_list[dict_mutli_string] = tmp_ct_list
 
-for show in ques_mutli_ct_list:
-	print show
-	print ques_mutli_ct_list[show]
+for ques_str in ques_mutli_ct_list:
+	i = 0
+	for chk_string in ques_mutli_ct_list[ques_str]:
+		trans_chk_string = doTranslate(chk_string,intab_str,outab_str)
+		if(trans_chk_string == ques_str):
+			j=0
+			for chk_char in chk_string:
+				dictionary_dict_list[str(ques_str[j])] = chk_char
+
+				j+=1
+		else:
+			
+			ct_ques_str = Counter(ques_str)
+			ct_chk_str = Counter(chk_string)
+			
+			if(ct_ques_str.values() == ct_chk_str.values()):
+				a=b=c=d=0
+				#for 
+				ctq_ch = ct_ques_str.most_common(1)[0][0]
+				ctq_ct = ct_ques_str.most_common(1)[0][1]
+				ccs_ch = ct_chk_str.most_common(1)[0][0]
+				ccs_ct = ct_chk_str.most_common(1)[0][1]
+
+				a = ques_str.find(ctq_ch)
+				b = chk_string.find(ccs_ch)
+
+				if( a == b):
+
+					c = ques_str.find(ctq_ch,a)+a
+
+					d = chk_string.find(ccs_ch,b)+b
+
+					if(c == d):
+						print "*********************"
+						print ques_str + " => " + chk_string
+						print "%s(%d) in [%d:%d]  => %s(%d) in [%d:%d]" %(ctq_ch,ctq_ct,a,c,ccs_ch,ccs_ct,b,d)
+
+
+
+
+		i += 1
+
+		#else:
+		#	print "not equl"
+		#	print ques_str
+		#	print trans_chk_string
+
+
 #print ques_mutli_ct_list
 
 #print dictionary_dict_list
+
+
 #print trans_ques_count_list
 
 
