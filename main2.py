@@ -23,7 +23,7 @@ def dictionaryDict():
 	while i < 26:
 		x = chr(97+i)
 		#print x
-		dictionary_dict[x] = []
+		dictionary_dict[x] = 0
 		i +=1
 
 	return dictionary_dict
@@ -55,7 +55,7 @@ def getKey(dictionaryDictList,questionCountList,dictionaryList):
 				if char not in trans_tab['value']:
 					dictionaryDictList[char] = char
 					trans_tab['key'].append(char)
-					trans_tab['vlaue'].append(char)
+					trans_tab['value'].append(char)
 		else:
 			#比對字典相同長度並唯一字串
 			for dict_word in questionCountList:
@@ -74,10 +74,10 @@ def getKey(dictionaryDictList,questionCountList,dictionaryList):
 		for key_camp_list in key:
 			i=0
 			for key_camp_char in key_camp_list:
-				dictionaryDictList[key_camp_char] = key[key_camp_list][0][i]
 				if key_camp_char not in trans_tab['key']:
-					trans_tab['value'].append(key_camp_char)
-					trans_tab['key'].append(key[key_camp_list][0][i])
+					dictionaryDictList[key_camp_char] = key[key_camp_list][0][i]
+					trans_tab['key'].append(key_camp_char)
+					trans_tab['value'].append(key[key_camp_list][0][i])
 				i += 1
 
 	#intab_str = "".join(trans_tab['value'])
@@ -95,8 +95,22 @@ def getMutliCharString(inputStringList):
 			mulie_char_string.append(input_string)
 	return mulie_char_string
 
+def getMutliCharKey():
+	pass
 
-ques_str = '''Dtuma mu fj fqh pcqd wscux dxvmtd mu uctjv fjv umkxjax. Mhu acddcj xkxdxjhu fqx nmhas (wsmas ocgxqju dxkcvi fjv sfqdcji), qsihsd (fjv mhu fuucamfhxv acjaxnhu hxdnc, dxhxq, fjv fqhmatkfhmcj), vijfdmau, fjv hsx ucjma rtfkmhmxu cp hmdbqx fjv hxehtqx. Hsx wcqv vxqmgxu pqcd Oqxxz μουσική (dctumzx; "fqh cp hsx Dtuxu"). 
+def formatDictionaryDictList(dictionaryDictList):
+	key = []
+	value = []
+	for index in dictionaryDictList:
+		if dictionaryDictList[index] != 0:
+			key.append(index)
+			value.append(dictionaryDictList[index])
+
+	return {'key':key,'value':value}
+
+
+
+question_str = '''Dtuma mu fj fqh pcqd wscux dxvmtd mu uctjv fjv umkxjax. Mhu acddcj xkxdxjhu fqx nmhas (wsmas ocgxqju dxkcvi fjv sfqdcji), qsihsd (fjv mhu fuucamfhxv acjaxnhu hxdnc, dxhxq, fjv fqhmatkfhmcj), vijfdmau, fjv hsx ucjma rtfkmhmxu cp hmdbqx fjv hxehtqx. Hsx wcqv vxqmgxu pqcd Oqxxz μουσική (dctumzx; "fqh cp hsx Dtuxu"). 
 
 Hsx aqxfhmcj, nxqpcqdfjax, umojmpmafjax, fjv xgxj hsx vxpmjmhmcj cp dtuma gfqi faacqvmjo hc atkhtqx fjv ucamfk acjhxeh. Dtuma qfjoxu pqcd uhqmahki cqofjmlxv acdncumhmcju (fjv hsxmq qxaqxfhmcj mj nxqpcqdfjax), hsqctos mdnqcgmufhmcjfk dtuma hc fkxfhcqma pcqdu. Dtuma afj bx vmgmvxv mjhc oxjqxu fjv utboxjqxu, fkhsctos hsx vmgmvmjo kmjxu fjv qxkfhmcjusmnu bxhwxxj dtuma oxjqxu fqx cphxj utbhkx, ucdxhmdxu cnxj hc nxqucjfk mjhxqnqxhfhmcj, fjv caafumcjfkki acjhqcgxqumfk. Wmhsmj hsx fqhu, dtuma dfi bx akfuumpmxv fu f nxqpcqdmjo fqh, f pmjx fqh, fjv ftvmhcqi fqh. Mh dfi fkuc bx vmgmvxv fdcjo fqh dtuma fjv pckz dtuma. Hsxqx mu fkuc f uhqcjo acjjxahmcj bxhwxxj dtuma fjv dfhsxdfhmau. Dtuma dfi bx nkfixv fjv sxfqv kmgx, dfi bx nfqh cp f vqfdfhma wcqz cq pmkd, cq dfi bx qxacqvxv. 
 
@@ -109,7 +123,7 @@ dict_str = '''a according accounts aleatoric all also although always among an a
 
 dictionary_dict_list = dictionaryDict() #dictionaryDictList
 #print dictionary_dict
-question_list = stringProcess(ques_str) #questionList
+question_list = stringProcess(question_str) #questionList
 #print question_list
 question_count_list = Counter(question_list) #questionCountList
 #print question_count_list.keys()
@@ -126,27 +140,13 @@ intab_list = get_key_result['key']
 outab_list = get_key_result['value']
 
 
-intab_str = "".join(intab_list)
-outab_str = "".join(outab_list)
+intab_str = "".join(get_key_result['key'])
+outab_str = "".join(get_key_result['value'])
 
-"""
-
-trans_result = doTranslate(ques_str,intab_str,outab_str)
-
-trans_ques_list = stringProcess(trans_result) #questionList
-#print question_list
-trans_ques_count_list = Counter(trans_ques_list) #questionCountList
-"""
-
-#print get_key_result['dictionaryDictList']
 
 ques_mutli_list = getMutliCharString(question_count_list)
 
 dict_mutli_list = getMutliCharString(dictionary_list)
-
-#print ques_mutli_list
-
-#print dict_mutli_list
 
 ques_mutli_ct_list = {}
 for dict_mutli_string in dict_mutli_list:
@@ -184,46 +184,36 @@ for ques_str in ques_mutli_ct_list:
 				fb = chk_string.find(ccs_ch)
 				if( fa == fb):
 
-					#print fa , fb
 					fc = ques_str.find(ctq_ch,(fa+1))+fa
 					fd = chk_string.find(ccs_ch,(fb+1))+fb
 					if(fc == fd):
 						char_index_ct = 0
 						for ques_str_char in ques_str:
 							dictionary_dict_list[ques_str_char] = chk_string[char_index_ct]
-							#intab_list.append()
 
 							char_index_ct += 1
 
 						dictionary_dict_list[ctq_ch] = ccs_ch
-						print "*********************"
-						print ques_str + " => " + chk_string
-						print "%s(%d) in [%d:%d]  => %s(%d) in [%d:%d]" %(ctq_ch,ctq_ct,fa,fc,ccs_ch,ccs_ct,fb,fd)
-
-
-
-
-
 
 		i += 1
 
-		#else:
-		#	print "not equl"
-		#	print ques_str
-		#	print trans_chk_string
+
+a = formatDictionaryDictList(dictionary_dict_list)
+
+intab_string = "".join(a['key'])
+outab_string = "".join(a['value'])
+
+print intab_string
+print outab_string
 
 
-#print ques_mutli_ct_list
+print question_str
 
-#intab_list = dictionary_dict_list.keys()
-#intab_string = "".join(intab_list)
+print "\n**********************************\n"
 
-#print intab_string
-
-print dictionary_dict_list
+print doTranslate(question_str,outab_string,intab_string)
 
 
-#print trans_ques_count_list
 
 
 
