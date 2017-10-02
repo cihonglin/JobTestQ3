@@ -3,6 +3,7 @@
 from collections import Counter
 from collections import defaultdict
 from string import maketrans
+import json
 import re
 
 #字串處理
@@ -255,7 +256,7 @@ print "**********************************\n"
 print " input: "+" ".join(dictionary_dict_list.keys())
 print "output: "+" ".join(dictionary_dict_list.values())
 print "\n"
-trans_string = intab_string+"\n"+outab_string
+trans_string = json.dumps(translate_string)
 
 tfo = open("translate.txt", "w+")
 print "creating file translate.txt ..."
