@@ -3,7 +3,6 @@
 from collections import Counter
 from collections import defaultdict
 from string import maketrans
-import difflib
 import re
 
 #字串處理
@@ -183,7 +182,6 @@ def getCharInSimilarString(dictionaryDictList):
 
 	sub_trans_list = []
 	for char in unlocate_input:
-		print "char : " + char 
 	 	for words in question_count_list.keys():
 	 		if words.find(char) != -1:
 	 			sub_trans_list.append(words)
@@ -209,33 +207,27 @@ def getCharInSimilarString(dictionaryDictList):
 					i+=1
 
 	return dictionaryDictList
+def openFile(fileName):
+	fo = open(fileName,"r+")
+	if(fo):
+		print " open file "+fileName+"..."
+		fc = fo.read()
+		fo.close()
+		return fc
+	else:
+		print fileName+" not exists"
 
 
-question_str = '''Dtuma mu fj fqh pcqd wscux dxvmtd mu uctjv fjv umkxjax. Mhu acddcj xkxdxjhu fqx nmhas (wsmas ocgxqju dxkcvi fjv sfqdcji), qsihsd (fjv mhu fuucamfhxv acjaxnhu hxdnc, dxhxq, fjv fqhmatkfhmcj), vijfdmau, fjv hsx ucjma rtfkmhmxu cp hmdbqx fjv hxehtqx. Hsx wcqv vxqmgxu pqcd Oqxxz μουσική (dctumzx; "fqh cp hsx Dtuxu"). 
-
-Hsx aqxfhmcj, nxqpcqdfjax, umojmpmafjax, fjv xgxj hsx vxpmjmhmcj cp dtuma gfqi faacqvmjo hc atkhtqx fjv ucamfk acjhxeh. Dtuma qfjoxu pqcd uhqmahki cqofjmlxv acdncumhmcju (fjv hsxmq qxaqxfhmcj mj nxqpcqdfjax), hsqctos mdnqcgmufhmcjfk dtuma hc fkxfhcqma pcqdu. Dtuma afj bx vmgmvxv mjhc oxjqxu fjv utboxjqxu, fkhsctos hsx vmgmvmjo kmjxu fjv qxkfhmcjusmnu bxhwxxj dtuma oxjqxu fqx cphxj utbhkx, ucdxhmdxu cnxj hc nxqucjfk mjhxqnqxhfhmcj, fjv caafumcjfkki acjhqcgxqumfk. Wmhsmj hsx fqhu, dtuma dfi bx akfuumpmxv fu f nxqpcqdmjo fqh, f pmjx fqh, fjv ftvmhcqi fqh. Mh dfi fkuc bx vmgmvxv fdcjo fqh dtuma fjv pckz dtuma. Hsxqx mu fkuc f uhqcjo acjjxahmcj bxhwxxj dtuma fjv dfhsxdfhmau. Dtuma dfi bx nkfixv fjv sxfqv kmgx, dfi bx nfqh cp f vqfdfhma wcqz cq pmkd, cq dfi bx qxacqvxv. 
-
-Hc dfji nxcnkx mj dfji atkhtqxu, dtuma mu fj mdncqhfjh nfqh cp hsxmq wfi cp kmpx. Fjamxjh Oqxxz fjv Mjvmfj nsmkcucnsxqu vxpmjxv dtuma fu hcjxu cqvxqxv scqmlcjhfkki fu dxkcvmxu fjv gxqhmafkki fu sfqdcjmxu. Acddcj ufimjou utas fu "hsx sfqdcji cp hsx unsxqxu" fjv "mh mu dtuma hc di xfqu" ncmjh hc hsx jchmcj hsfh dtuma mu cphxj cqvxqxv fjv nkxfufjh hc kmuhxj hc. Scwxgxq, 20hs-axjhtqi acdncuxq Ycsj Afox hsctosh hsfh fji uctjv afj bx dtuma, ufimjo, pcq xefdnkx, "Hsxqx mu jc jcmux, cjki uctjv." Dtumackcomuh Yxfj-Yfartxu Jfhhmxl utddfqmlxu hsx qxkfhmgmuh, ncuh-dcvxqj gmxwncmjh: "Hsx bcqvxq bxhwxxj dtuma fjv jcmux mu fkwfiu atkhtqfkki vxpmjxv—wsmas mdnkmxu hsfh, xgxj wmhsmj f umjokx ucamxhi, hsmu bcqvxq vcxu jch fkwfiu nfuu hsqctos hsx ufdx nkfax; mj uscqh, hsxqx mu qfqxki f acjuxjutu ... Bi fkk faactjhu hsxqx mu jc umjokx fjv mjhxqatkhtqfk tjmgxqufk acjaxnh vxpmjmjo wsfh dtuma dmosh bx.'''
-
-dict_str = '''a according accounts aleatoric all also although always among an ancient and any are art articulation arts as associated auditory be between border by cage can classified common composer compositions concept concepts connection consensus context controversial creation culturally culture cultures defined definedwhich defining definition derives divided dividing does dramatic dynamics ears elements even example film fine folk for form forms from genres governs greek harmonies harmony heard horizontally however implies important improvisational in indian intercultural interpretation into is it its jeanjacques john life lines listen live many mathematics may medium melodies melody meter might mousike muses music musicologist my nattiez no noise not notion occasionally of often only open or ordered organized part pass people performance performing personal philosophers pitch place played pleasant point postmodern qualities ranges rarely recorded recreation relationships relativist rhythm same saying sayings short significance silence single social society sometimes sonic sound spheres strictly strong subgenres subtle such summarizes tempo texture that thcentury the their there this thought through timbre to tones universal vary vertically viewpoint way what which whose within word work'''
-
-#print "Question String => \n " + ques_str + "\n"
-#print "Dictionary String => \n " + dict_str + "\n"
+question_str = openFile("question.txt")
+dict_str = openFile("dict.txt")
 
 dictionary_dict_list = dictionaryDict() #dictionaryDictList
-#print dictionary_dict
 question_list = stringProcess(question_str) #questionList
-#print question_list
 question_count_list = Counter(question_list) #questionCountList
-#print question_count_list.keys()
 dictionary_list = stringProcess(dict_str) #dictionaryList
-#print dictionary_list
 
 #step 1
 dictionary_dict_list = getKey(dictionary_dict_list,question_count_list,dictionary_list)
-
-#print "".join(dictionary_dict_list.keys())
-#print "".join(dictionary_dict_list.values())
 
 #step 2
 dictionary_dict_list = getMutliCharKey(dictionary_dict_list,question_count_list,dictionary_list)
@@ -249,22 +241,38 @@ intab_string = translate_string['key']
 outab_string = translate_string['value']
 trans_result = doTranslate(question_str,outab_string,intab_string)
 
-
-print "\n**********************************"
-print "*          input strings         *"
-print "**********************************\n"
-print question_str
-
+#print "\n**********************************"
+#print "*          input strings         *"
+#print "**********************************\n"
+#print question_str
+#print "\n**********************************"
+#print "*       dictionary strings       *"
+#print "**********************************\n"
+#print dict_str
 print "\n**********************************"
 print "*       translate char list      *"
 print "**********************************\n"
 print " input: "+" ".join(dictionary_dict_list.keys())
 print "output: "+" ".join(dictionary_dict_list.values())
+print "\n"
+trans_string = intab_string+"\n"+outab_string
+
+tfo = open("translate.txt", "w+")
+print "creating file translate.txt ..."
+tfo.write(trans_string)
+tfo.close()
+print "done"
 
 print "\n**********************************"
 print "*    translate result string     *"
 print "**********************************\n"
 print trans_result
+print "\n"
 
+afo = open("answer.txt", "w+")
+print "creating file answer.txt..."
+afo.write(trans_result)
+afo.close()
+print "done"
 
 
